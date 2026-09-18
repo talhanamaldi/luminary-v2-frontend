@@ -1,0 +1,31 @@
+:host {
+  display: block;
+}
+
+.form-actions,
+.form-actions__primary,
+.form-actions__secondary {
+  display: flex;
+  align-items: center;
+  gap: var(--lm-space-2);
+}
+
+.form-actions {
+  justify-content: space-between;
+}
+
+.form-actions__primary {
+  margin-left: auto;
+}
+
+@media (max-width: 40rem) {
+  .form-actions,
+  .form-actions__primary {
+    align-items: stretch;
+    flex-direction: column-reverse;
+  }
+
+  .form-actions__primary {
+    width: 100%;
+  }
+}

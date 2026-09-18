@@ -1,0 +1,19 @@
+@if (filters().length > 0) {
+  <div class="active-filters">
+    <mat-chip-set aria-label="Aktif filtreler">
+      @for (filter of filters(); track filter.id) {
+        <mat-chip-row (removed)="removeFilter.emit(filter.id)">
+          <strong>{{ filter.label }}:</strong>&nbsp;{{ filter.value }}
+          <button
+            matChipRemove
+            type="button"
+            [attr.aria-label]="filter.label + ' filtresini kaldır'"
+          >
+            ×
+          </button>
+        </mat-chip-row>
+      }
+    </mat-chip-set>
+    <button mat-button type="button" (click)="clearFilters.emit()">Tümünü temizle</button>
+  </div>
+}

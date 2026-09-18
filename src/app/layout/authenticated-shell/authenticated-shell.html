@@ -1,0 +1,138 @@
+<mat-sidenav-container class="shell" [hasBackdrop]="compact()">
+  @if (showWorkspaceNavigation()) {
+    <mat-sidenav
+      class="sidebar"
+      [mode]="compact() ? 'over' : 'side'"
+      [opened]="!compact()"
+      [disableClose]="!compact()"
+      aria-label="Ana menü"
+    >
+      <a class="brand brand--sidebar" [routerLink]="dashboardUrl" aria-label="Luminary ana sayfa">
+        <span class="brand__mark" aria-hidden="true">L</span>
+        <span>Luminary</span>
+      </a>
+
+      @if (auth.activeWorkspace(); as workspace) {
+        <div class="workspace-card">
+          <span class="workspace-card__mark" aria-hidden="true">
+            {{ workspace.tenantName.charAt(0).toLocaleUpperCase('tr-TR') }}
+          </span>
+          <span class="workspace-card__text">
+            <strong>{{ workspace.tenantName }}</strong>
+            <small>{{ activeRoleLabel() }}</small>
+          </span>
+        </div>
+      }
+
+      <nav class="navigation" aria-label="Uygulama menüsü">
+        <span class="navigation__label">Genel</span>
+        <a
+          #dashboardLink="routerLinkActive"
+          class="navigation__item"
+          [routerLink]="dashboardUrl"
+          routerLinkActive="navigation__item--active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          [attr.aria-current]="dashboardLink.isActive ? 'page' : null"
+          (click)="closeCompactNavigation()"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M4 4h6v6H4V4Zm10 0h6v6h-6V4ZM4 14h6v6H4v-6Zm10 0h6v6h-6v-6Z" />
+          </svg>
+          <span>Dashboard</span>
+        </a>
+      </nav>
+    </mat-sidenav>
+  }
+
+  <mat-sidenav-content class="shell__content">
+    <header class="topbar">
+      <div class="topbar__start">
+        @if (showWorkspaceNavigation() && compact()) {
+          <button
+            class="navigation-toggle"
+            type="button"
+            aria-label="Ana menüyü aç"
+            (click)="toggleNavigation()"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M4 7h16M4 12h16M4 17h16" />
+            </svg>
+          </button>
+        }
+
+        @if (compact() || !showWorkspaceNavigation()) {
+          <a class="brand" [routerLink]="dashboardUrl" aria-label="Luminary ana sayfa">
+            <span class="brand__mark" aria-hidden="true">L</span>
+            <span>Luminary</span>
+          </a>
+        }
+      </div>
+
+      <div class="topbar__actions">
+        @if (auth.activeWorkspace(); as activeWorkspace) {
+          @if (auth.workspaces().length > 1) {
+            <button
+              class="workspace-switcher"
+              mat-stroked-button
+              type="button"
+              [matMenuTriggerFor]="workspaceMenu"
+              [disabled]="busy() || activity.pending()"
+            >
+              <span>{{ activeWorkspace.tenantName }}</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="m7 10 5 5 5-5" />
+              </svg>
+            </button>
+            <mat-menu #workspaceMenu="matMenu">
+              @for (workspace of auth.workspaces(); track workspace.tenantId) {
+                <button
+                  mat-menu-item
+                  type="button"
+                  [disabled]="workspace.tenantId === activeWorkspace.tenantId"
+                  (click)="selectWorkspace(workspace)"
+                >
+                  {{ workspace.tenantName }}
+                </button>
+              }
+            </mat-menu>
+          } @else {
+            <span class="workspace-name">{{ activeWorkspace.tenantName }}</span>
+          }
+        }
+
+        <button
+          class="profile-button"
+          type="button"
+          [matMenuTriggerFor]="profileMenu"
+          [disabled]="busy() || activity.pending()"
+          aria-label="Hesap menüsünü aç"
+        >
+          {{ initials() }}
+        </button>
+        <mat-menu #profileMenu="matMenu" xPosition="before">
+          <div class="profile-menu">
+            <strong>{{ displayName() }}</strong>
+            <span>{{ auth.user()?.email }}</span>
+          </div>
+          <mat-divider />
+          <button
+            mat-menu-item
+            type="button"
+            [disabled]="busy() || activity.pending()"
+            (click)="logout()"
+          >
+            Güvenli çıkış
+          </button>
+        </mat-menu>
+      </div>
+
+      @if (busy() || activity.pending()) {
+        <mat-progress-bar mode="indeterminate" aria-label="İşlem devam ediyor" />
+      }
+    </header>
+
+    <div class="shell__page">
+      <router-outlet />
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

@@ -1,0 +1,22 @@
+:host {
+  display: block;
+}
+
+.form-error-summary {
+  display: grid;
+  gap: var(--lm-space-2);
+  padding: var(--lm-space-4);
+  border: 1px solid color-mix(in srgb, var(--lm-color-danger) 22%, transparent);
+  border-radius: var(--lm-radius-md);
+  color: var(--lm-color-danger);
+  background: var(--lm-color-danger-surface);
+}
+
+ul {
+  margin: 0;
+  padding-left: var(--lm-space-5);
+}
+
+small {
+  overflow-wrap: anywhere;
+}

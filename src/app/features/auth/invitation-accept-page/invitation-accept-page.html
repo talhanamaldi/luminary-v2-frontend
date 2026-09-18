@@ -1,0 +1,50 @@
+<main class="invite-page">
+  <a class="brand" routerLink="/" aria-label="Luminary ana sayfa">Luminary</a>
+
+  <mat-card appearance="outlined" class="invite-card">
+    <mat-card-header>
+      <mat-card-title>Kurum daveti</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      @if (!auth.isAuthenticated() && state() === 'idle') {
+        <h1>Davetinizi kabul etmek için giriş yapın.</h1>
+        <p>
+          Davetin gönderildiği e-posta adresine ait hesapla giriş yapmanız gerekir. Girişten sonra
+          bu sayfaya otomatik olarak döneceksiniz.
+        </p>
+      } @else if (state() === 'accepting') {
+        <div class="processing" role="status" aria-live="polite">
+          <span class="spinner" aria-hidden="true"></span>
+          <div>
+            <h1>Davetiniz doğrulanıyor.</h1>
+            <p>Bu işlem yalnızca birkaç saniye sürecek.</p>
+          </div>
+        </div>
+      } @else if (state() === 'accepted') {
+        <div class="result-mark result-mark--success" aria-hidden="true">✓</div>
+        <h1>Kuruma katıldınız.</h1>
+        <p>
+          <strong>{{ workspaceName() }}</strong> çalışma alanı hesabınıza eklendi.
+        </p>
+      } @else if (state() === 'error') {
+        <div class="result-mark result-mark--error" aria-hidden="true">!</div>
+        <h1>Davet kabul edilemedi.</h1>
+        <p role="alert">{{ message() }}</p>
+        @if (traceId()) {
+          <p class="trace">Destek kodu: {{ traceId() }}</p>
+        }
+      }
+    </mat-card-content>
+
+    <mat-card-actions>
+      @if (!auth.isAuthenticated() && state() === 'idle') {
+        <button mat-flat-button type="button" (click)="login()">Giriş yap ve devam et</button>
+      } @else if (state() === 'accepted') {
+        <button mat-flat-button type="button" (click)="goToDashboard()">Ana sayfaya git</button>
+      } @else if (state() === 'error') {
+        <a mat-stroked-button routerLink="/">Ana sayfaya dön</a>
+      }
+    </mat-card-actions>
+  </mat-card>
+</main>

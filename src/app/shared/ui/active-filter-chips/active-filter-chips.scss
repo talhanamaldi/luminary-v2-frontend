@@ -1,0 +1,25 @@
+:host {
+  display: block;
+}
+
+.active-filters {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--lm-space-3);
+}
+
+mat-chip-set {
+  min-width: 0;
+}
+
+mat-chip-row strong {
+  font-weight: 700;
+}
+
+@media (max-width: 40rem) {
+  .active-filters {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,15 @@
+@if (messages().length > 0 || requestId()) {
+  <div class="form-error-summary" role="alert">
+    <strong>{{ title() }}</strong>
+    @if (messages().length > 0) {
+      <ul>
+        @for (message of messages(); track $index) {
+          <li>{{ message }}</li>
+        }
+      </ul>
+    }
+    @if (requestId()) {
+      <small>Destek kodu: {{ requestId() }}</small>
+    }
+  </div>
+}

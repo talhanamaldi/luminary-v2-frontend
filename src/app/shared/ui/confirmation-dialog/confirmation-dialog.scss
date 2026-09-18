@@ -1,0 +1,17 @@
+@use '@angular/material' as mat;
+
+mat-dialog-content {
+  max-width: 30rem;
+  color: var(--lm-color-text-muted);
+  line-height: 1.6;
+}
+
+.confirmation-dialog__danger {
+  @include mat.button-overrides(
+    (
+      filled-container-color: var(--lm-color-danger),
+      filled-label-text-color: var(--lm-color-on-primary),
+      filled-state-layer-color: var(--lm-color-on-primary),
+    )
+  );
+}

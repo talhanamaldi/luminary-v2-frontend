@@ -1,0 +1,116 @@
+:host {
+  display: block;
+}
+
+.filter-panel {
+  overflow: hidden;
+  border: 1px solid var(--lm-color-border);
+  border-radius: var(--lm-radius-lg);
+  background: var(--lm-color-surface-raised);
+  box-shadow: var(--lm-shadow-sm);
+}
+
+.filter-panel__toggle {
+  display: flex;
+  width: 100%;
+  min-height: 4rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--lm-space-4);
+  padding: var(--lm-space-4) var(--lm-space-5);
+  border: 0;
+  color: var(--lm-color-text);
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+
+.filter-panel__toggle:hover:not(:disabled) {
+  background: var(--lm-color-surface-subtle);
+}
+
+.filter-panel__toggle:focus-visible {
+  outline: 3px solid rgb(31 97 83 / 24%);
+  outline-offset: -3px;
+}
+
+.filter-panel__toggle:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.filter-panel__heading {
+  display: grid;
+  gap: var(--lm-space-1);
+}
+
+.filter-panel__heading small {
+  color: var(--lm-color-text-muted);
+  font-weight: 400;
+}
+
+.filter-panel__toggle-end {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: var(--lm-space-3);
+}
+
+.filter-panel__count {
+  display: grid;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  place-items: center;
+  padding-inline: var(--lm-space-1);
+  border-radius: var(--lm-radius-full);
+  color: var(--lm-color-on-primary);
+  background: var(--lm-color-primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.filter-panel__toggle svg {
+  width: 1.15rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+  transition: transform 160ms ease;
+}
+
+.filter-panel__chevron--open {
+  transform: rotate(180deg);
+}
+
+.filter-panel__body {
+  display: grid;
+  gap: var(--lm-space-5);
+  padding: var(--lm-space-5);
+  border-top: 1px solid var(--lm-color-border);
+}
+
+.filter-panel__fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: var(--lm-space-4);
+}
+
+.filter-panel__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--lm-space-2);
+}
+
+@media (max-width: 40rem) {
+  .filter-panel__toggle,
+  .filter-panel__body {
+    padding: var(--lm-space-4);
+  }
+
+  .filter-panel__actions {
+    align-items: stretch;
+    flex-direction: column-reverse;
+  }
+}

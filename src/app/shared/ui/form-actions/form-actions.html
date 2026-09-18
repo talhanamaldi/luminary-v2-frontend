@@ -1,0 +1,15 @@
+<div class="form-actions">
+  <div class="form-actions__secondary">
+    <ng-content select="[formSecondaryAction]" />
+  </div>
+  <div class="form-actions__primary">
+    @if (showCancel()) {
+      <button mat-button type="button" [disabled]="pending()" (click)="cancelRequested.emit()">
+        {{ cancelLabel() }}
+      </button>
+    }
+    <button mat-flat-button type="submit" [disabled]="pending() || submitDisabled()">
+      {{ pending() ? pendingLabel() : submitLabel() }}
+    </button>
+  </div>
+</div>

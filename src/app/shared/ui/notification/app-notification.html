@@ -1,0 +1,11 @@
+<div class="notification" [class]="'notification notification--' + data.tone">
+  <span class="notification__indicator" aria-hidden="true"></span>
+  <div class="notification__content">
+    <strong>{{ toneLabel }}</strong>
+    <span>{{ data.message }}</span>
+    @if (data.requestId) {
+      <small>Destek kodu: {{ data.requestId }}</small>
+    }
+  </div>
+  <button type="button" aria-label="Bildirimi kapat" (click)="dismiss()">×</button>
+</div>

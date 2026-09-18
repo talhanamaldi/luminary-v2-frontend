@@ -1,0 +1,49 @@
+<section class="filter-panel">
+  <button
+    class="filter-panel__toggle"
+    type="button"
+    [disabled]="disabled()"
+    [attr.aria-expanded]="open()"
+    [attr.aria-controls]="panelId"
+    (click)="toggle()"
+  >
+    <span class="filter-panel__heading">
+      <strong>{{ title() }}</strong>
+      @if (description()) {
+        <small>{{ description() }}</small>
+      }
+    </span>
+    <span class="filter-panel__toggle-end">
+      @if (activeFilterCount() > 0) {
+        <span class="filter-panel__count" aria-label="Aktif filtre sayısı">
+          {{ activeFilterCount() }}
+        </span>
+      }
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        focusable="false"
+        [class.filter-panel__chevron--open]="open()"
+      >
+        <path d="m7 10 5 5 5-5" />
+      </svg>
+    </span>
+  </button>
+
+  @if (open()) {
+    <form class="filter-panel__body" [id]="panelId" (ngSubmit)="apply()">
+      <div class="filter-panel__fields">
+        <ng-content select="[filterPanelFields]" />
+      </div>
+      <div class="filter-panel__actions">
+        <ng-content select="[filterPanelActions]" />
+        <button mat-button type="button" [disabled]="pending() || disabled()" (click)="clear()">
+          {{ clearLabel() }}
+        </button>
+        <button mat-flat-button type="submit" [disabled]="pending() || disabled()">
+          {{ pending() ? 'Uygulanıyor…' : applyLabel() }}
+        </button>
+      </div>
+    </form>
+  }
+</section>

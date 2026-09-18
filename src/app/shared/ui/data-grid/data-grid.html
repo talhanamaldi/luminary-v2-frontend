@@ -1,0 +1,105 @@
+<section class="data-grid" [attr.aria-label]="ariaLabel()">
+  @if (controller().searchEnabled) {
+    <div class="data-grid__toolbar">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>{{ searchLabel() }}</mat-label>
+        <input
+          matInput
+          type="search"
+          autocomplete="off"
+          [placeholder]="searchPlaceholder()"
+          [formControl]="searchControl"
+        />
+        @if (searchControl.value) {
+          <button
+            matSuffix
+            mat-button
+            type="button"
+            aria-label="Aramayı temizle"
+            (click)="clearSearch()"
+          >
+            Temizle
+          </button>
+        }
+      </mat-form-field>
+      <ng-content select="[dataGridToolbar]" />
+    </div>
+  }
+
+  <div class="data-grid__surface">
+    @if (controller().loading()) {
+      <mat-progress-bar mode="indeterminate" aria-label="Liste yükleniyor" />
+    }
+
+    @if (controller().loading() && controller().items().length === 0) {
+      <div class="data-grid__loading" role="status">Liste yükleniyor…</div>
+    } @else if (controller().error(); as error) {
+      <div class="data-grid__error" role="alert">
+        <span>{{ error.message }}</span>
+        @if (error.requestId) {
+          <small>Destek kodu: {{ error.requestId }}</small>
+        }
+        <button mat-stroked-button type="button" (click)="controller().reload()">
+          Tekrar dene
+        </button>
+      </div>
+    } @else if (controller().empty()) {
+      <div class="data-grid__empty">
+        <strong>{{ emptyTitle() }}</strong>
+        <span>{{ emptyDescription() }}</span>
+      </div>
+    } @else if (controller().items().length > 0) {
+      <div class="data-grid__table-scroll">
+        <table
+          mat-table
+          matSort
+          [dataSource]="controller().items()"
+          [matSortActive]="activeSortField()"
+          [matSortDirection]="activeSortDirection()"
+          (matSortChange)="sortChanged($event)"
+        >
+          @for (column of columns(); track column.key()) {
+            <ng-container [matColumnDef]="column.key()">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                [mat-sort-header]="column.sortField() || column.key()"
+                [disabled]="!column.sortField()"
+                [style.width]="column.width()"
+                [class.data-grid__cell--center]="column.align() === 'center'"
+                [class.data-grid__cell--end]="column.align() === 'end'"
+              >
+                {{ column.header() }}
+              </th>
+              <td
+                mat-cell
+                *matCellDef="let item; let index = index"
+                [class.data-grid__cell--center]="column.align() === 'center'"
+                [class.data-grid__cell--end]="column.align() === 'end'"
+              >
+                <ng-container
+                  [ngTemplateOutlet]="column.template"
+                  [ngTemplateOutletContext]="{ $implicit: item, index: index }"
+                />
+              </td>
+            </ng-container>
+          }
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns()"></tr>
+        </table>
+      </div>
+
+      <mat-paginator
+        [length]="controller().totalItems()"
+        [pageIndex]="controller().query().skip / controller().query().take"
+        [pageSize]="controller().query().take"
+        [pageSizeOptions]="pageSizeOptions()"
+        [disabled]="controller().loading()"
+        showFirstLastButtons
+        aria-label="Liste sayfaları"
+        (page)="pageChanged($event)"
+      />
+    }
+  </div>
+</section>

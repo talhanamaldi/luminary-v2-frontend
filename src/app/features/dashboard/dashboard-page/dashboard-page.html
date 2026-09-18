@@ -1,0 +1,152 @@
+<main class="dashboard">
+  <app-page-header
+    appearance="hero"
+    eyebrow="Luminary çalışma alanı"
+    [title]="'Hoş geldin, ' + displayName() + '.'"
+    description="Çalışma alanınıza ait içeriklere ve hesabınızla ilgili işlemlere buradan erişebilirsiniz."
+  />
+
+  <section class="dashboard-grid" aria-label="Hesap ve çalışma alanı özeti">
+    <mat-card appearance="outlined" class="summary-card">
+      <mat-card-header><mat-card-title>Aktif çalışma alanı</mat-card-title></mat-card-header>
+      <mat-card-content>
+        @if (auth.activeWorkspace(); as workspace) {
+          <div class="workspace-summary">
+            <span class="workspace-summary__mark" aria-hidden="true">
+              {{ workspace.tenantName.charAt(0).toLocaleUpperCase('tr-TR') }}
+            </span>
+            <div>
+              <strong>{{ workspace.tenantName }}</strong>
+              <span>{{ roleLabel() }}</span>
+            </div>
+          </div>
+          <dl class="metadata">
+            <div>
+              <dt>Çalışma alanı türü</dt>
+              <dd>{{ workspaceTypeLabel() }}</dd>
+            </div>
+            <div>
+              <dt>Durum</dt>
+              <dd>
+                <span class="status-badge">{{ workspaceStatusLabel() }}</span>
+              </dd>
+            </div>
+          </dl>
+        } @else {
+          <div class="empty-state">
+            <strong>Henüz bir kuruma bağlı değilsiniz.</strong>
+            <p>
+              Kurumunuzdan gelen davet bağlantısıyla bu hesabı bir çalışma alanına ekleyebilirsiniz.
+            </p>
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card appearance="outlined" class="summary-card summary-card--muted">
+      <mat-card-header><mat-card-title>Hesap özeti</mat-card-title></mat-card-header>
+      <mat-card-content>
+        <dl class="account-summary">
+          <div>
+            <dt>E-posta</dt>
+            <dd>{{ auth.user()?.email || 'Belirtilmedi' }}</dd>
+          </div>
+          <div>
+            <dt>Erişilebilir alan</dt>
+            <dd>{{ auth.workspaces().length }}</dd>
+          </div>
+          <div>
+            <dt>Oturum</dt>
+            <dd><span class="status-badge">Güvenli</span></dd>
+          </div>
+        </dl>
+      </mat-card-content>
+    </mat-card>
+
+    @if (canInviteStudents()) {
+      <mat-card appearance="outlined" class="summary-card invite-card">
+        <mat-card-header>
+          <mat-card-title>Öğrenci daveti</mat-card-title>
+          <mat-card-subtitle>
+            Öğrenciye tek kullanımlık ve süreli bir katılım bağlantısı gönderin.
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <form
+            class="invite-form"
+            [formGroup]="invitationForm"
+            (ngSubmit)="sendStudentInvitation()"
+            novalidate
+          >
+            <mat-form-field appearance="outline" subscriptSizing="dynamic">
+              <mat-label>Öğrenci e-posta adresi</mat-label>
+              <input
+                matInput
+                type="email"
+                inputmode="email"
+                autocomplete="email"
+                maxlength="254"
+                formControlName="email"
+                (input)="clearInvitationFeedback()"
+              />
+              @if (
+                invitationForm.controls.email.touched &&
+                invitationForm.controls.email.hasError('required')
+              ) {
+                <mat-error>E-posta adresi zorunludur.</mat-error>
+              } @else if (
+                invitationForm.controls.email.touched &&
+                invitationForm.controls.email.hasError('email')
+              ) {
+                <mat-error>Geçerli bir e-posta adresi girin.</mat-error>
+              } @else if (
+                invitationForm.controls.email.touched &&
+                invitationForm.controls.email.hasError('maxlength')
+              ) {
+                <mat-error>E-posta adresi en fazla 254 karakter olabilir.</mat-error>
+              }
+            </mat-form-field>
+
+            <div class="invite-form__actions">
+              <button mat-flat-button type="submit" [disabled]="invitationBusy()">
+                {{ invitationState() === 'creating' ? 'Oluşturuluyor…' : 'Davet gönder' }}
+              </button>
+              <button
+                mat-stroked-button
+                type="button"
+                [disabled]="invitationBusy()"
+                (click)="resendStudentInvitation()"
+              >
+                {{ invitationState() === 'resending' ? 'Yenileniyor…' : 'Yeniden gönder' }}
+              </button>
+            </div>
+          </form>
+
+          @if (invitationFieldError()) {
+            <p class="invite-feedback invite-feedback--error" role="alert">
+              {{ invitationFieldError() }}
+            </p>
+          }
+
+          @if (invitationFeedback()) {
+            <div
+              class="invite-feedback"
+              [class.invite-feedback--success]="invitationState() === 'success'"
+              [class.invite-feedback--error]="invitationState() === 'error'"
+              [attr.role]="invitationState() === 'error' ? 'alert' : 'status'"
+              aria-live="polite"
+            >
+              <span>{{ invitationFeedback() }}</span>
+              @if (invitationExpiryLabel()) {
+                <small>Bağlantı {{ invitationExpiryLabel() }} tarihine kadar geçerlidir.</small>
+              }
+              @if (invitationRequestId()) {
+                <small>Destek kodu: {{ invitationRequestId() }}</small>
+              }
+            </div>
+          }
+        </mat-card-content>
+      </mat-card>
+    }
+  </section>
+</main>

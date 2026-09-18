@@ -1,0 +1,52 @@
+<main class="auth-page">
+  <section class="auth-intro" aria-labelledby="login-heading">
+    <a class="brand" routerLink="/" aria-label="Luminary ana sayfa">
+      <span class="brand__mark" aria-hidden="true">L</span>
+      <span>Luminary</span>
+    </a>
+
+    <div class="auth-intro__content">
+      <p class="eyebrow">Daha bilinçli çalış. Daha net ilerle.</p>
+      <h1 id="login-heading">Öğrenci gelişimini anlamlı aksiyona dönüştür.</h1>
+      <p>
+        Kişiselleştirilmiş çalışma deneyimi ve kurumunuzun akademik görünürlüğü tek bir güvenli
+        alanda.
+      </p>
+    </div>
+
+    <p class="auth-intro__footnote">AI destekli sınav hazırlık ve eğitim yönetim platformu</p>
+  </section>
+
+  <section class="auth-panel" aria-label="Hesaba giriş">
+    <mat-card appearance="outlined" class="login-card">
+      <mat-card-header>
+        <mat-card-title>Tekrar hoş geldiniz</mat-card-title>
+        <mat-card-subtitle>Luminary hesabınızla devam edin.</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        @if (hasConnectionError()) {
+          <div class="status-message status-message--error" role="alert">
+            <strong>Sunucuya ulaşılamadı.</strong>
+            <span>Backend servisinin çalıştığını kontrol edip tekrar deneyin.</span>
+            @if (correlations.lastError(); as correlation) {
+              <small>Destek kodu: {{ correlation.requestId }}</small>
+            }
+          </div>
+        } @else {
+          <p class="security-note">
+            Giriş güvenli kimlik sağlayıcısı üzerinden gerçekleşir. Parolanız Luminary frontend'i
+            tarafından saklanmaz.
+          </p>
+        }
+      </mat-card-content>
+
+      <mat-card-actions>
+        @if (hasConnectionError()) {
+          <button mat-stroked-button type="button" (click)="retry()">Bağlantıyı yenile</button>
+        }
+        <button mat-flat-button type="button" (click)="login()">Giriş yap</button>
+      </mat-card-actions>
+    </mat-card>
+  </section>
+</main>

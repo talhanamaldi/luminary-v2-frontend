@@ -1,0 +1,59 @@
+:host {
+  display: block;
+}
+
+.notification {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: var(--lm-space-3);
+  min-width: min(22rem, calc(100vw - 2rem));
+  max-width: 30rem;
+  align-items: start;
+  padding: var(--lm-space-4);
+  border: 1px solid var(--lm-color-border);
+  border-radius: var(--lm-radius-lg);
+  color: var(--lm-color-text);
+  background: var(--lm-color-surface-raised);
+  box-shadow: var(--lm-shadow-lg);
+}
+
+.notification__indicator {
+  width: 0.65rem;
+  aspect-ratio: 1;
+  margin-top: 0.35rem;
+  border-radius: var(--lm-radius-full);
+  background: var(--lm-color-info);
+}
+
+.notification__content {
+  display: grid;
+  gap: var(--lm-space-1);
+  line-height: 1.4;
+}
+
+.notification__content > span,
+.notification__content small {
+  color: var(--lm-color-text-muted);
+}
+
+.notification button {
+  border: 0;
+  color: var(--lm-color-text-muted);
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.notification--success .notification__indicator {
+  background: var(--lm-color-success);
+}
+
+.notification--warning .notification__indicator {
+  background: var(--lm-color-warning);
+}
+
+.notification--error .notification__indicator {
+  background: var(--lm-color-danger);
+}
