@@ -1,0 +1,50 @@
+mat-dialog-content {
+  display: grid;
+  max-width: 32rem;
+  gap: var(--lm-space-4);
+}
+
+.invitation-dialog__intro {
+  margin: 0;
+  color: var(--lm-color-text);
+  line-height: 1.6;
+}
+
+.invitation-dialog__intro strong {
+  color: var(--lm-color-primary-strong);
+}
+
+.invitation-dialog__link {
+  display: grid;
+  gap: var(--lm-space-2);
+  padding: var(--lm-space-4);
+  border: 1px solid var(--lm-color-border);
+  border-radius: var(--lm-radius-lg);
+  background: var(--lm-color-surface-subtle);
+}
+
+.invitation-dialog__link-label {
+  color: var(--lm-color-text-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.invitation-dialog__link-value {
+  overflow-wrap: anywhere;
+  color: var(--lm-color-primary);
+  font-family: var(--lm-font-sans);
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.invitation-dialog__link-value:hover {
+  color: var(--lm-color-primary-strong);
+}
+
+.invitation-dialog__expiry {
+  color: var(--lm-color-text-muted);
+  font-size: 0.76rem;
+}

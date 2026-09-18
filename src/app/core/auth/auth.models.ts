@@ -37,6 +37,15 @@ export interface InvitationCreated {
   readonly expiresAt: string;
 }
 
+export interface PendingInvitation {
+  readonly invitationId: string;
+  readonly tenantId: string;
+  readonly tenantName: string;
+  readonly role: MembershipRole;
+  readonly expiresAt: string;
+  readonly acceptUrl: string;
+}
+
 export type WorkspaceFilterField = 'tenantId' | 'name' | 'type' | 'role' | 'joinedAt';
 export type WorkspaceSortField = 'name' | 'type' | 'role' | 'joinedAt';
 

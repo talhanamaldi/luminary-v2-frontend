@@ -9,6 +9,7 @@ import {
   InvitationCreated,
   InvitedWorkspace,
   MeResponse,
+  PendingInvitation,
   Workspace,
   WorkspaceFilterField,
   WorkspaceSortField,
@@ -54,6 +55,10 @@ export class AuthApi {
     return this.http.post<InvitationCreated>(`${this.config.apiBaseUrl}/invitations/resend`, {
       email,
     });
+  }
+
+  pendingInvitations(): Observable<PendingInvitation[]> {
+    return this.http.get<PendingInvitation[]>(`${this.config.apiBaseUrl}/invitations/pending`);
   }
 
   logout(): Observable<void> {

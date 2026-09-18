@@ -101,6 +101,47 @@
         }
 
         <button
+          class="notification-button"
+          type="button"
+          [matMenuTriggerFor]="notificationMenu"
+          (menuOpened)="refreshNotifications()"
+          [disabled]="busy() || activity.pending()"
+          aria-label="Bildirimler"
+          aria-haspopup="menu"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M12 3a5 5 0 0 0-5 5c0 5.5-2 6.5-2 6.5h14s-2-1-2-6.5a5 5 0 0 0-5-5Z" />
+            <path d="M9.5 18a2.5 2.5 0 0 0 5 0" />
+          </svg>
+          @if (notifications.count() > 0) {
+            <span
+              class="notification-button__badge"
+              [attr.aria-label]="notifications.count() + ' bekleyen bildirim'"
+            >
+              {{ notifications.count() }}
+            </span>
+          }
+        </button>
+        <mat-menu #notificationMenu="matMenu" xPosition="before">
+          <span class="notification-menu__header">Bildirimler</span>
+          @if (notifications.loading()) {
+            <span class="notification-menu__hint">Bildirimler yükleniyor…</span>
+          } @else if (notifications.pendingInvitations().length === 0) {
+            <span class="notification-menu__hint">Henüz bildiriminiz yok.</span>
+          } @else {
+            @for (invitation of notifications.pendingInvitations(); track invitation.invitationId) {
+              <button mat-menu-item type="button" (click)="openInvitation(invitation)">
+                <div class="notification-item">
+                  <strong>{{ invitation.tenantName }}</strong>
+                  <span>Davet: {{ roleLabel(invitation.role) }}</span>
+                  <small>{{ expiryLabel(invitation.expiresAt) }}</small>
+                </div>
+              </button>
+            }
+          }
+        </mat-menu>
+
+        <button
           class="profile-button"
           type="button"
           [matMenuTriggerFor]="profileMenu"

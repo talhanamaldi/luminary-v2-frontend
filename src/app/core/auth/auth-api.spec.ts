@@ -56,4 +56,21 @@ describe('AuthApi', () => {
       joinedAt: '2026-09-16T20:00:00Z',
     });
   });
+
+  it('lists the signed-in user pending invitations', () => {
+    api.pendingInvitations().subscribe();
+
+    const request = http.expectOne('/api/v1/invitations/pending');
+    expect(request.request.method).toBe('GET');
+    request.flush([
+      {
+        invitationId: 'a1b2c3',
+        tenantId: 'luminary-demo',
+        tenantName: 'Luminary Demo',
+        role: 'STUDENT',
+        expiresAt: '2026-09-25T12:00:00Z',
+        acceptUrl: 'http://localhost:4200/invitations/accept?token=raw-token',
+      },
+    ]);
+  });
 });

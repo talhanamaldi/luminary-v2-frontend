@@ -1,0 +1,29 @@
+<h2 mat-dialog-title>{{ data.invitation.tenantName }} kurumundan davet</h2>
+
+<mat-dialog-content>
+  <p class="invitation-dialog__intro">
+    <strong>{{ data.invitation.tenantName }}</strong> kurumu sizi
+    <strong>{{ roleLabel }}</strong> olarak davet etti. Katılmak için aşağıdaki davet bağlantısına
+    tıklayarak üyeliğinizi aktifleştirin.
+  </p>
+
+  <div class="invitation-dialog__link">
+    <span class="invitation-dialog__link-label">Davet bağlantısı</span>
+    <a
+      class="invitation-dialog__link-value"
+      href="{{ data.invitation.acceptUrl }}"
+      (click)="$event.preventDefault(); accept()"
+      >{{ data.invitation.acceptUrl }}</a
+    >
+    @if (expiryLabel()) {
+      <small class="invitation-dialog__expiry">
+        Bağlantı {{ expiryLabel() }} tarihine kadar geçerlidir.
+      </small>
+    }
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" [mat-dialog-close]="true">Kapat</button>
+  <button mat-flat-button type="button" (click)="accept()">Daveti kabul et</button>
+</mat-dialog-actions>

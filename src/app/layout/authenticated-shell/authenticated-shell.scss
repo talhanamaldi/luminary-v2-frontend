@@ -144,6 +144,7 @@
 }
 
 .navigation-toggle,
+.notification-button,
 .profile-button {
   display: grid;
   width: 2.5rem;
@@ -159,6 +160,36 @@
   margin-right: var(--lm-space-2);
   color: var(--lm-color-text);
   background: transparent;
+}
+
+.notification-button {
+  position: relative;
+  color: var(--lm-color-text);
+  background: transparent;
+}
+
+.notification-button svg {
+  width: 1.35rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.notification-button__badge {
+  position: absolute;
+  top: 0.1rem;
+  right: 0;
+  min-width: 1.15rem;
+  height: 1.15rem;
+  padding-inline: 0.25rem;
+  border-radius: var(--lm-radius-full);
+  color: var(--lm-color-on-primary);
+  background: var(--lm-color-danger);
+  font: 700 0.68rem var(--lm-font-sans);
+  line-height: 1.15rem;
+  text-align: center;
 }
 
 .navigation-toggle svg {
@@ -177,9 +208,43 @@
 }
 
 .navigation-toggle:focus-visible,
+.notification-button:focus-visible,
 .profile-button:focus-visible {
   outline: 3px solid rgb(31 97 83 / 28%);
   outline-offset: 2px;
+}
+
+.notification-menu__header {
+  display: block;
+  padding: 0.8rem 1rem 0.3rem;
+  color: var(--lm-color-text);
+  font: 750 0.78rem var(--lm-font-sans);
+  text-transform: uppercase;
+}
+
+.notification-menu__hint {
+  display: block;
+  padding: 0.8rem 1rem 1rem;
+  color: var(--lm-color-text-muted);
+  font-size: 0.85rem;
+}
+
+.notification-item {
+  min-width: 16rem;
+  line-height: 1.4;
+}
+
+.notification-item strong {
+  color: var(--lm-color-text);
+}
+
+.notification-item span,
+.notification-item small {
+  color: var(--lm-color-text-muted);
+}
+
+.notification-item small {
+  font-size: 0.72rem;
 }
 
 .workspace-switcher {

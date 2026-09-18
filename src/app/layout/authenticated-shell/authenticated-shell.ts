@@ -4,6 +4,7 @@ import {
   Component,
   computed,
   inject,
+  OnInit,
   signal,
   ViewChild,
 } from '@angular/core';
@@ -18,11 +19,23 @@ import { map } from 'rxjs';
 
 import { apiErrorCode, apiRequestId } from '../../core/api/api-error';
 import { apiErrorMessageForCode } from '../../core/api/api-error-messages';
-import { membershipRoleLabel, Workspace } from '../../core/auth/auth.models';
+import {
+  MembershipRole,
+  membershipRoleLabel,
+  PendingInvitation,
+  Workspace,
+} from '../../core/auth/auth.models';
 import { AuthStore } from '../../core/auth/auth.store';
 import { APP_PATHS } from '../../core/config/app-config';
+import { NotificationStore } from '../../core/notifications/notification.store';
 import { AppActivityStore } from '../../core/ui/app-activity.store';
+import { InvitationDialogService } from '../../features/notifications/invitation-dialog/invitation-dialog.service';
 import { AppNotificationService } from '../../shared/ui/notification/app-notification.service';
+
+const EXPIRY_FORMATTER = new Intl.DateTimeFormat('tr-TR', {
+  dateStyle: 'long',
+  timeStyle: 'short',
+});
 
 @Component({
   selector: 'app-authenticated-shell',
@@ -40,15 +53,17 @@ import { AppNotificationService } from '../../shared/ui/notification/app-notific
   styleUrl: './authenticated-shell.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AuthenticatedShell {
+export class AuthenticatedShell implements OnInit {
   @ViewChild(MatSidenav) private navigation?: MatSidenav;
 
   private readonly breakpointObserver = inject(BreakpointObserver);
   private readonly notification = inject(AppNotificationService);
   private readonly router = inject(Router);
+  private readonly invitationDialog = inject(InvitationDialogService);
 
   protected readonly auth = inject(AuthStore);
   protected readonly activity = inject(AppActivityStore);
+  protected readonly notifications = inject(NotificationStore);
   protected readonly dashboardUrl = `/${APP_PATHS.dashboard}`;
   protected readonly busy = signal(false);
   protected readonly compact = toSignal(
@@ -72,6 +87,27 @@ export class AuthenticatedShell {
   protected readonly activeRoleLabel = computed(() =>
     membershipRoleLabel(this.auth.activeWorkspace()?.role ?? null),
   );
+
+  ngOnInit(): void {
+    void this.notifications.load();
+  }
+
+  protected refreshNotifications(): void {
+    void this.notifications.load();
+  }
+
+  protected openInvitation(invitation: PendingInvitation): void {
+    this.invitationDialog.open(invitation);
+  }
+
+  protected roleLabel(role: MembershipRole | null): string | null {
+    return membershipRoleLabel(role);
+  }
+
+  protected expiryLabel(iso: string): string | null {
+    const value = new Date(iso);
+    return Number.isNaN(value.getTime()) ? null : EXPIRY_FORMATTER.format(value);
+  }
 
   protected toggleNavigation(): void {
     void this.navigation?.toggle();
