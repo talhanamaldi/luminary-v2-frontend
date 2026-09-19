@@ -40,6 +40,26 @@
           </svg>
           <span>Dashboard</span>
         </a>
+
+        @if (isInstitutionAdmin()) {
+          <span class="navigation__label">Kurum</span>
+          <a
+            #studentsLink="routerLinkActive"
+            class="navigation__item"
+            [routerLink]="studentsUrl"
+            routerLinkActive="navigation__item--active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            [attr.aria-current]="studentsLink.isActive ? 'page' : null"
+            (click)="closeCompactNavigation()"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path
+                d="M12 3.5 2.5 8 12 12.5 21.5 8 12 3.5Zm-7 6.6v4.4c0 .8 1.6 2.5 7 2.5s7-1.7 7-2.5v-4.4L12 15 5 10.1Z"
+              />
+            </svg>
+            <span>Öğrencilerim</span>
+          </a>
+        }
       </nav>
     </mat-sidenav>
   }
@@ -126,16 +146,53 @@
           <span class="notification-menu__header">Bildirimler</span>
           @if (notifications.loading()) {
             <span class="notification-menu__hint">Bildirimler yükleniyor…</span>
-          } @else if (notifications.pendingInvitations().length === 0) {
+          } @else if (notifications.items().length === 0) {
             <span class="notification-menu__hint">Henüz bildiriminiz yok.</span>
           } @else {
-            @for (invitation of notifications.pendingInvitations(); track invitation.invitationId) {
-              <button mat-menu-item type="button" (click)="openInvitation(invitation)">
-                <div class="notification-item">
-                  <strong>{{ invitation.tenantName }}</strong>
-                  <span>Davet: {{ roleLabel(invitation.role) }}</span>
-                  <small>{{ expiryLabel(invitation.expiresAt) }}</small>
-                </div>
+            @for (item of notifications.items(); track item.kind + itemId(item)) {
+              @switch (item.kind) {
+                @case ('invitation') {
+                  <button mat-menu-item type="button" (click)="openInvitation(item.invitation)">
+                    <div class="notification-item">
+                      <strong>{{ item.invitation.tenantName }}</strong>
+                      <span>Davet: {{ roleLabel(item.invitation.role) }}</span>
+                      <small>{{ expiryLabel(item.invitation.expiresAt) }}</small>
+                    </div>
+                  </button>
+                }
+                @case ('school') {
+                  <button mat-menu-item type="button">
+                    <div
+                      class="notification-item"
+                      [class.notification-item--unread]="item.notification.readAt === null"
+                    >
+                      <strong>{{ item.notification.studentDisplayName }}</strong>
+                      <span>
+                        {{
+                          'Kurumunuz ' +
+                            item.notification.studentDisplayName +
+                            ' (' +
+                            item.notification.studentEmail +
+                            ') ' +
+                            schoolNotificationTypeLabel(item.notification.type) +
+                            '.'
+                        }}
+                      </span>
+                      <small>{{ notificationTimeLabel(item.notification.createdAt) }}</small>
+                    </div>
+                  </button>
+                }
+              }
+            }
+            @if (notifications.unreadSchoolNotifications().length > 0) {
+              <mat-divider />
+              <button
+                mat-menu-item
+                type="button"
+                [disabled]="busy() || activity.pending()"
+                (click)="markAllSchoolNotificationsRead()"
+              >
+                Tümünü okundu işaretle
               </button>
             }
           }
@@ -156,6 +213,11 @@
             <span>{{ auth.user()?.email }}</span>
           </div>
           <mat-divider />
+          @if (isStudent()) {
+            <a mat-menu-item [routerLink]="profileUrl" (click)="closeCompactNavigation()">
+              Profil bilgilerim
+            </a>
+          }
           <button
             mat-menu-item
             type="button"

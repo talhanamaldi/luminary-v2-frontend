@@ -1,0 +1,52 @@
+:host {
+  display: block;
+}
+
+.student-details-page {
+  display: grid;
+  gap: var(--lm-space-6);
+  align-content: start;
+}
+
+.details-card__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 8rem;
+  color: var(--lm-color-text-muted);
+}
+
+.details-card--error mat-card-content {
+  display: grid;
+  gap: var(--lm-space-4);
+  justify-items: start;
+  color: var(--lm-color-text);
+}
+
+.details-card--error span {
+  color: var(--lm-color-text-muted);
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--lm-space-5);
+}
+
+.details-grid__item {
+  display: grid;
+  gap: var(--lm-space-1);
+}
+
+.details-grid__label {
+  color: var(--lm-color-text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.metrics-card p {
+  margin: 0;
+  color: var(--lm-color-text-muted);
+  line-height: 1.5;
+}

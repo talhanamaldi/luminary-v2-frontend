@@ -1,0 +1,25 @@
+:host {
+  display: block;
+}
+
+.students-page {
+  display: grid;
+  gap: var(--lm-space-6);
+}
+
+.student-link {
+  color: var(--lm-color-primary-strong);
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.student-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.student-email {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

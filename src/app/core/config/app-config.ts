@@ -10,6 +10,8 @@ export const APP_PATHS = {
   login: 'login',
   dashboard: 'dashboard',
   invitationAccept: 'invitations/accept',
+  students: 'students',
+  profile: 'profile',
 } as const;
 
 /**

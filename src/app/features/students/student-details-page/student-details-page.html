@@ -1,0 +1,82 @@
+<main class="student-details-page">
+  <app-page-header
+    eyebrow="Öğrenci profili"
+    [title]="title()"
+    description="Öğrencinin çalışma alanı kaydını ve profil bilgilerini görüntüleyin."
+  >
+    <a mat-stroked-button ngProjectAs="[pageHeaderActions]" [routerLink]="studentsUrl">
+      ← Öğrencilere dön
+    </a>
+  </app-page-header>
+
+  @if (loading()) {
+    <mat-card appearance="outlined" class="details-card">
+      <mat-card-content class="details-card__loading" role="status">
+        Öğrenci bilgileri yükleniyor…
+      </mat-card-content>
+    </mat-card>
+  } @else if (error(); as message) {
+    <mat-card appearance="outlined" class="details-card details-card--error">
+      <mat-card-content role="alert">
+        <strong>Öğrenci bilgileri yüklenemedi.</strong>
+        <span>{{ message }}</span>
+        <a mat-stroked-button [routerLink]="studentsUrl">Öğrencilere dön</a>
+      </mat-card-content>
+    </mat-card>
+  } @else if (details(); as details) {
+    <mat-card appearance="outlined" class="details-card">
+      <mat-card-content>
+        <div class="details-grid">
+          <div class="details-grid__item">
+            <span class="details-grid__label">Ad soyad</span>
+            <strong>{{ details.displayName }}</strong>
+          </div>
+          <div class="details-grid__item">
+            <span class="details-grid__label">E-posta</span>
+            <strong>{{ details.email || 'Belirtilmedi' }}</strong>
+          </div>
+          <div class="details-grid__item">
+            <span class="details-grid__label">Şehir</span>
+            <strong>{{ details.city || 'Belirtilmedi' }}</strong>
+          </div>
+          <div class="details-grid__item">
+            <span class="details-grid__label">Ülke</span>
+            <strong>{{ details.country || 'Belirtilmedi' }}</strong>
+          </div>
+          <div class="details-grid__item">
+            <span class="details-grid__label">Sınıf</span>
+            <strong>{{ gradeLabel(details.gradeLevel) || 'Belirtilmedi' }}</strong>
+          </div>
+          <div class="details-grid__item">
+            <span class="details-grid__label">Alan</span>
+            <strong>{{ fieldLabel(details.field) || 'Belirtilmedi' }}</strong>
+          </div>
+          <div class="details-grid__item">
+            <span class="details-grid__label">Okul</span>
+            <strong>{{ details.schoolName || 'Belirtilmedi' }}</strong>
+          </div>
+          <div class="details-grid__item">
+            <span class="details-grid__label">Katılım tarihi</span>
+            <strong>{{ dateLabel(details.joinedAt) || 'Belirtilmedi' }}</strong>
+          </div>
+          <div class="details-grid__item">
+            <span class="details-grid__label">Profil son güncelleme</span>
+            <strong>{{ dateLabel(details.profileUpdatedAt) || 'Belirtilmedi' }}</strong>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card appearance="outlined" class="metrics-card">
+      <mat-card-header>
+        <mat-card-title>Performans ve etkinlik metrikleri</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>
+          Bu bölümde öğrencinin deneme sınavı sonuçları, tamamlanan görevler ve çalışma etkinliği
+          gibi performans metrikleri yakında görüntülenecektir.
+        </p>
+      </mat-card-content>
+    </mat-card>
+  }
+</main>

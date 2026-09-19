@@ -238,6 +238,14 @@
   color: var(--lm-color-text);
 }
 
+.notification-item--unread {
+  border-left: 3px solid var(--lm-color-primary);
+}
+
+.notification-item--unread strong {
+  color: var(--lm-color-primary-strong);
+}
+
 .notification-item span,
 .notification-item small {
   color: var(--lm-color-text-muted);

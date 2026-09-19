@@ -27,13 +27,22 @@ import {
 } from '../../core/auth/auth.models';
 import { AuthStore } from '../../core/auth/auth.store';
 import { APP_PATHS } from '../../core/config/app-config';
-import { NotificationStore } from '../../core/notifications/notification.store';
+import {
+  SchoolNotificationType,
+  schoolNotificationTypeLabel,
+} from '../../core/institution/institution.models';
+import { NotificationStore, NotificationItem } from '../../core/notifications/notification.store';
 import { AppActivityStore } from '../../core/ui/app-activity.store';
 import { InvitationDialogService } from '../../features/notifications/invitation-dialog/invitation-dialog.service';
 import { AppNotificationService } from '../../shared/ui/notification/app-notification.service';
 
 const EXPIRY_FORMATTER = new Intl.DateTimeFormat('tr-TR', {
   dateStyle: 'long',
+  timeStyle: 'short',
+});
+
+const NOTIFICATION_TIME_FORMATTER = new Intl.DateTimeFormat('tr-TR', {
+  dateStyle: 'medium',
   timeStyle: 'short',
 });
 
@@ -65,6 +74,8 @@ export class AuthenticatedShell implements OnInit {
   protected readonly activity = inject(AppActivityStore);
   protected readonly notifications = inject(NotificationStore);
   protected readonly dashboardUrl = `/${APP_PATHS.dashboard}`;
+  protected readonly studentsUrl = `/${APP_PATHS.students}`;
+  protected readonly profileUrl = `/${APP_PATHS.profile}`;
   protected readonly busy = signal(false);
   protected readonly compact = toSignal(
     this.breakpointObserver.observe('(max-width: 56.25rem)').pipe(map(({ matches }) => matches)),
@@ -73,6 +84,10 @@ export class AuthenticatedShell implements OnInit {
   protected readonly showWorkspaceNavigation = computed(
     () => this.auth.activeWorkspace()?.status === 'ACTIVE',
   );
+  protected readonly isInstitutionAdmin = computed(
+    () => this.auth.activeWorkspace()?.role === 'INSTITUTION_ADMIN',
+  );
+  protected readonly isStudent = computed(() => this.auth.activeWorkspace()?.role === 'STUDENT');
   protected readonly displayName = computed(() => {
     const user = this.auth.user();
     return user?.displayName?.trim() || user?.email || 'Luminary kullanıcısı';
@@ -98,6 +113,42 @@ export class AuthenticatedShell implements OnInit {
 
   protected openInvitation(invitation: PendingInvitation): void {
     this.invitationDialog.open(invitation);
+  }
+
+  protected itemId(item: NotificationItem): string {
+    return item.kind === 'invitation'
+      ? item.invitation.invitationId
+      : item.notification.notificationId;
+  }
+
+  protected async markAllSchoolNotificationsRead(): Promise<void> {
+    if (this.busy() || this.activity.pending()) {
+      return;
+    }
+
+    this.busy.set(true);
+    try {
+      await this.notifications.markAllSchoolNotificationsRead();
+    } catch (error: unknown) {
+      this.notification.error(
+        apiErrorMessageForCode(
+          apiErrorCode(error),
+          'Bildirimler şu anda okundu olarak işaretlenemedi. Lütfen tekrar deneyin.',
+        ),
+        { requestId: apiRequestId(error) },
+      );
+    } finally {
+      this.busy.set(false);
+    }
+  }
+
+  protected schoolNotificationTypeLabel(type: SchoolNotificationType | null): string | null {
+    return schoolNotificationTypeLabel(type);
+  }
+
+  protected notificationTimeLabel(iso: string): string | null {
+    const value = new Date(iso);
+    return Number.isNaN(value.getTime()) ? null : NOTIFICATION_TIME_FORMATTER.format(value);
   }
 
   protected roleLabel(role: MembershipRole | null): string | null {

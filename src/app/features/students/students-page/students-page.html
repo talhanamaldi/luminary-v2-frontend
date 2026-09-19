@@ -1,0 +1,42 @@
+<main class="students-page">
+  <app-page-header
+    eyebrow="Luminary kurum alanı"
+    title="Öğrencilerim"
+    description="Çalışma alanınızdaki öğrencilerin listesini görüntüleyin."
+  />
+
+  <app-data-grid
+    [controller]="list"
+    ariaLabel="Öğrenci listesi"
+    searchLabel="Öğrenci ara"
+    searchPlaceholder="Ad veya soyad ile ara"
+    emptyTitle="Öğrenci bulunamadı"
+    emptyDescription="Henüz öğrenci davet edilmedi veya aramanızla eşleşen sonuç yok."
+  >
+    <ng-template appDataGridColumn="name" header="Öğrenci" sortField="name" let-item>
+      <a
+        class="student-link"
+        [routerLink]="studentDetailsUrl(student(item).userId)"
+        (click)="$event.stopPropagation()"
+      >
+        {{ student(item).displayName }}
+      </a>
+    </ng-template>
+
+    <ng-template appDataGridColumn="email" header="E-posta" sortField="email" let-item>
+      <span class="student-email">{{ student(item).email }}</span>
+    </ng-template>
+
+    <ng-template appDataGridColumn="city" header="Şehir" let-item>
+      {{ student(item).city || '—' }}
+    </ng-template>
+
+    <ng-template appDataGridColumn="gradeLevel" header="Sınıf" sortField="gradeLevel" let-item>
+      {{ gradeLabel(student(item).gradeLevel) || '—' }}
+    </ng-template>
+
+    <ng-template appDataGridColumn="joinedAt" header="Katılım Tarihi" sortField="joinedAt" let-item>
+      {{ joinedLabel(student(item).joinedAt) || '—' }}
+    </ng-template>
+  </app-data-grid>
+</main>

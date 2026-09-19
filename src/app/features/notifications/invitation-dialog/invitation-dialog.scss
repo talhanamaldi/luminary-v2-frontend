@@ -48,3 +48,11 @@ mat-dialog-content {
   color: var(--lm-color-text-muted);
   font-size: 0.76rem;
 }
+
+.invitation-dialog__actions-start {
+  margin-right: auto;
+}
+
+.invitation-dialog__reject {
+  color: var(--lm-color-danger);
+}

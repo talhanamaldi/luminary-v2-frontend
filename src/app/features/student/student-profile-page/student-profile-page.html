@@ -1,0 +1,100 @@
+<main class="student-profile-page">
+  <app-page-header
+    eyebrow="Öğrenci hesabı"
+    title="Profil bilgilerim"
+    description="Aktif çalışma alanındaki akademik bilgilerinizi güncelleyin."
+  />
+
+  @if (loading()) {
+    <mat-card appearance="outlined" class="profile-card">
+      <mat-card-content class="profile-card__loading" role="status">
+        Profil bilgileri yükleniyor…
+      </mat-card-content>
+    </mat-card>
+  } @else if (error(); as message) {
+    <mat-card appearance="outlined" class="profile-card profile-card--error">
+      <mat-card-content role="alert">
+        <strong>Profil bilgileriniz yüklenemedi.</strong>
+        <span>{{ message }}</span>
+        <button mat-stroked-button type="button" (click)="loadProfile()">Tekrar dene</button>
+      </mat-card-content>
+    </mat-card>
+  } @else {
+    <mat-card appearance="outlined" class="profile-card">
+      <mat-card-content>
+        <form class="profile-form" [formGroup]="form" (ngSubmit)="saveProfile()" novalidate>
+          <p class="profile-form__note">
+            Sınıf ve okul bilgileri kurumunuz tarafından yönetilir. Bu alanlardan yalnızca «Alan»
+            seçiminizi güncelleyebilirsiniz.
+          </p>
+          <div class="profile-form__fields">
+            <mat-form-field appearance="outline" subscriptSizing="dynamic">
+              <mat-label>Sınıf</mat-label>
+              <mat-select
+                formControlName="gradeLevel"
+                (selectionChange)="clearFieldError('gradeLevel')"
+              >
+                @for (option of gradeOptions(); track option.value) {
+                  <mat-option [value]="option.value">{{ option.label }}</mat-option>
+                }
+              </mat-select>
+              @if (
+                form.controls.gradeLevel.touched && form.controls.gradeLevel.hasError('required')
+              ) {
+                <mat-error>Sınıf seçimi zorunludur.</mat-error>
+              } @else if (
+                form.controls.gradeLevel.touched && form.controls.gradeLevel.hasError('server')
+              ) {
+                <mat-error>{{ form.controls.gradeLevel.errors?.['server'] }}</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" subscriptSizing="dynamic">
+              <mat-label>Alan</mat-label>
+              <mat-select formControlName="field" (selectionChange)="clearFieldError('field')">
+                @for (option of fieldOptions(); track option.value) {
+                  <mat-option [value]="option.value">{{ option.label }}</mat-option>
+                }
+              </mat-select>
+              @if (form.controls.field.touched && form.controls.field.hasError('required')) {
+                <mat-error>Alan seçimi zorunludur.</mat-error>
+              } @else if (form.controls.field.touched && form.controls.field.hasError('server')) {
+                <mat-error>{{ form.controls.field.errors?.['server'] }}</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" subscriptSizing="dynamic">
+              <mat-label>Okul adı</mat-label>
+              <input
+                matInput
+                type="text"
+                autocomplete="organization"
+                maxlength="120"
+                formControlName="schoolName"
+                (input)="clearFieldError('schoolName')"
+              />
+              @if (
+                form.controls.schoolName.touched && form.controls.schoolName.hasError('maxlength')
+              ) {
+                <mat-error>Okul adı en fazla 120 karakter olabilir.</mat-error>
+              } @else if (
+                form.controls.schoolName.touched && form.controls.schoolName.hasError('server')
+              ) {
+                <mat-error>{{ form.controls.schoolName.errors?.['server'] }}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <app-form-actions
+            submitLabel="Profilimi kaydet"
+            pendingLabel="Kaydediliyor…"
+            cancelLabel="Vazgeç"
+            [pending]="saving()"
+            [submitDisabled]="!dirty()"
+            (cancelRequested)="cancelProfile()"
+          />
+        </form>
+      </mat-card-content>
+    </mat-card>
+  }
+</main>

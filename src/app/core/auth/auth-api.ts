@@ -47,6 +47,13 @@ export class AuthApi {
     });
   }
 
+  rejectInvitation(invitationId: string): Observable<void> {
+    return this.http.post<void>(
+      `${this.config.apiBaseUrl}/invitations/${invitationId}/reject`,
+      null,
+    );
+  }
+
   createStudentInvitation(email: string): Observable<InvitationCreated> {
     return this.http.post<InvitationCreated>(`${this.config.apiBaseUrl}/invitations`, { email });
   }

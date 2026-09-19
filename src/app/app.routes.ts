@@ -36,6 +36,28 @@ export const routes: Routes = [
           import('./features/dashboard/dashboard-page/dashboard-page').then((m) => m.DashboardPage),
         title: 'Ana sayfa | Luminary',
       },
+      {
+        path: APP_PATHS.students,
+        loadComponent: () =>
+          import('./features/students/students-page/students-page').then((m) => m.StudentsPage),
+        title: 'Öğrencilerim | Luminary',
+      },
+      {
+        path: `${APP_PATHS.students}/:userId`,
+        loadComponent: () =>
+          import('./features/students/student-details-page/student-details-page').then(
+            (m) => m.StudentDetailsPage,
+          ),
+        title: 'Öğrenci | Luminary',
+      },
+      {
+        path: APP_PATHS.profile,
+        loadComponent: () =>
+          import('./features/student/student-profile-page/student-profile-page').then(
+            (m) => m.StudentProfilePage,
+          ),
+        title: 'Profil bilgilerim | Luminary',
+      },
     ],
   },
   {
