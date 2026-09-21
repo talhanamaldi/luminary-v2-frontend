@@ -196,16 +196,15 @@ export class AuthenticatedShell implements OnInit {
     }
   }
 
-  protected async logout(): Promise<void> {
+  protected logout(): void {
     if (this.busy() || this.activity.pending()) {
       return;
     }
 
     this.busy.set(true);
     try {
-      await this.auth.logout();
-      await this.router.navigateByUrl(`/${APP_PATHS.login}`);
-    } finally {
+      this.auth.logout();
+    } catch {
       this.busy.set(false);
     }
   }

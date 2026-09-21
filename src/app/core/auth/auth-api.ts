@@ -68,7 +68,4 @@ export class AuthApi {
     return this.http.get<PendingInvitation[]>(`${this.config.apiBaseUrl}/invitations/pending`);
   }
 
-  logout(): Observable<void> {
-    return this.http.post<void>(`${this.config.apiBaseUrl}/auth/logout`, null);
-  }
 }

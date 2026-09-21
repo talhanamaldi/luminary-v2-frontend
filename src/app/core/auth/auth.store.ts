@@ -4,6 +4,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { AuthApi } from './auth-api';
 import { MeResponse } from './auth.models';
+import { AuthNavigation } from './auth-navigation';
 
 type AuthState =
   | { readonly status: 'loading'; readonly session: null }
@@ -14,6 +15,7 @@ type AuthState =
 @Injectable({ providedIn: 'root' })
 export class AuthStore {
   private readonly api = inject(AuthApi);
+  private readonly navigation = inject(AuthNavigation);
   private readonly state = signal<AuthState>({ status: 'loading', session: null });
 
   readonly status = computed(() => this.state().status);
@@ -42,12 +44,9 @@ export class AuthStore {
     await this.loadSession();
   }
 
-  async logout(): Promise<void> {
-    try {
-      await firstValueFrom(this.api.logout());
-    } finally {
-      this.state.set({ status: 'unauthenticated', session: null });
-    }
+  logout(): void {
+    this.state.set({ status: 'unauthenticated', session: null });
+    this.navigation.beginLogout();
   }
 
   private async loadSession(): Promise<void> {
