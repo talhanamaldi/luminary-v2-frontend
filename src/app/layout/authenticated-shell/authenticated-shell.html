@@ -1,9 +1,10 @@
 <mat-sidenav-container class="shell" [hasBackdrop]="compact()">
   @if (showWorkspaceNavigation()) {
     <mat-sidenav
+      id="main-navigation"
       class="sidebar"
       [mode]="compact() ? 'over' : 'side'"
-      [opened]="!compact()"
+      [opened]="compact() ? false : sidebarOpen()"
       [disableClose]="!compact()"
       aria-label="Ana menü"
     >
@@ -67,11 +68,13 @@
   <mat-sidenav-content class="shell__content">
     <header class="topbar">
       <div class="topbar__start">
-        @if (showWorkspaceNavigation() && compact()) {
+        @if (showWorkspaceNavigation()) {
           <button
             class="navigation-toggle"
             type="button"
-            aria-label="Ana menüyü aç"
+            aria-label="Ana menüyü aç veya kapat"
+            aria-controls="main-navigation"
+            [attr.aria-expanded]="compact() ? null : sidebarOpen()"
             (click)="toggleNavigation()"
           >
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -80,7 +83,7 @@
           </button>
         }
 
-        @if (compact() || !showWorkspaceNavigation()) {
+        @if (compact() || !showWorkspaceNavigation() || !sidebarOpen()) {
           <a class="brand" [routerLink]="dashboardUrl" aria-label="Luminary ana sayfa">
             <span class="brand__mark" aria-hidden="true">L</span>
             <span>Luminary</span>
@@ -237,5 +240,9 @@
     <div class="shell__page">
       <router-outlet />
     </div>
+
+    <footer class="shell-footer" aria-label="Uygulama bilgileri">
+      © {{ currentYear }} Luminary · Tüm hakları saklıdır.
+    </footer>
   </mat-sidenav-content>
 </mat-sidenav-container>

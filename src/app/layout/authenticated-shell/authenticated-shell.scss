@@ -24,7 +24,10 @@
 }
 
 .brand--sidebar {
-  margin: var(--lm-space-6) var(--lm-space-5) var(--lm-space-8);
+  display: flex;
+  height: var(--lm-shell-topbar-height);
+  padding-inline: var(--lm-space-5);
+  border-bottom: 1px solid var(--lm-color-border);
 }
 
 .brand__mark {
@@ -41,7 +44,7 @@
   display: flex;
   align-items: center;
   gap: var(--lm-space-3);
-  margin: 0 var(--lm-space-4) var(--lm-space-8);
+  margin: var(--lm-space-5) var(--lm-space-4) var(--lm-space-8);
   padding: var(--lm-space-3);
   border: 1px solid var(--lm-color-border);
   border-radius: var(--lm-radius-lg);
@@ -123,6 +126,7 @@
   gap: var(--lm-space-4);
   padding-inline: clamp(1rem, 3vw, 2rem);
   border-bottom: 1px solid var(--lm-color-border);
+  border-radius: 0 0 var(--lm-radius-lg) var(--lm-radius-lg);
   background: rgb(250 252 251 / 90%);
   backdrop-filter: blur(1rem);
 }
@@ -295,7 +299,18 @@
 }
 
 .shell__page {
+  flex: 1 0 auto;
   padding: clamp(1.25rem, 4vw, 3rem);
+}
+
+.shell__content {
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+}
+
+.shell-footer {
+  padding: var(--lm-space-4);
 }
 
 @media (max-width: 40rem) {
@@ -316,4 +331,5 @@
   .shell__page {
     padding: var(--lm-space-4);
   }
+
 }

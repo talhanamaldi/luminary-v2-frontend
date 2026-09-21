@@ -76,7 +76,9 @@ export class AuthenticatedShell implements OnInit {
   protected readonly dashboardUrl = `/${APP_PATHS.dashboard}`;
   protected readonly studentsUrl = `/${APP_PATHS.students}`;
   protected readonly profileUrl = `/${APP_PATHS.profile}`;
+  protected readonly currentYear = new Date().getFullYear();
   protected readonly busy = signal(false);
+  protected readonly sidebarOpen = signal(true);
   protected readonly compact = toSignal(
     this.breakpointObserver.observe('(max-width: 56.25rem)').pipe(map(({ matches }) => matches)),
     { initialValue: false },
@@ -161,7 +163,12 @@ export class AuthenticatedShell implements OnInit {
   }
 
   protected toggleNavigation(): void {
-    void this.navigation?.toggle();
+    if (this.compact()) {
+      void this.navigation?.toggle();
+      return;
+    }
+
+    this.sidebarOpen.update((open) => !open);
   }
 
   protected async closeCompactNavigation(): Promise<void> {
